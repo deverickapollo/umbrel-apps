@@ -8,6 +8,10 @@ description: >-
   Run your monero node and independently store and validate every single Monero transaction with it.
   This is a full node that will download the entire Monero blockchain and store it on your Umbrel. 
   This is the most secure way to run a Monero node, but it will take a long time to sync and will require a lot of storage space.
+
+  Please note that after installing Monero Node, the app interface may not display any sync progress for several hours.
+  This behaviour is typical at this stage of development.
+  The initial sync is still happening in the background, and you'll see the status reflected in the app as soon as it's available.
 developer: deverickapollo
 website: https://www.getmonero.org/
 dependencies: []
