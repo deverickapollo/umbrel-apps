@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# Enable monero app if
+MONERO_CONTAINER_NAME="monero_monerod_1" # Adjust this to your Monero container name
+MONERO_CONTAINER_RUNNING=$(docker ps --filter "name=$MONERO_CONTAINER_NAME" --format "{{.Names}}")
+# Also check if monero docker container exists
+MONERO_CONTAINER_EXISTS=$(docker ps -a --filter "name=$MONERO_CONTAINER_NAME" --format "{{.Names}}")
+if [ ! -z "$MONERO_CONTAINER_RUNNING" ]; then
+  echo "Monero container is running"
+  #call docker_gen.py to generate the environment variables
+  python3 ../scripts/docker_gen.py add
+  exit 0
+else
+  if [ ! -z "$MONERO_CONTAINER_EXISTS" ]; then
+    echo "Monero container exists but not running"
+    exit 0
+  else
+    echo "Monero container does not exist"
+    #check if variables are set and remove
+    python3 ../scripts/docker_gen.py remove
+    exit 1
+  fi
+fi
+# Check for Monero installation and create the necessary directories
+
