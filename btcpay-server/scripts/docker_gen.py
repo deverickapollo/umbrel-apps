@@ -1,5 +1,4 @@
 import sys
-
 import yaml
 
 # Define the environment variables and volume to add/remove
@@ -11,7 +10,7 @@ environment_variables = {
     "BTCPAY_XMR_WALLET_DAEMON_WALLETDIR": "${APP_MONERO_WALLET_DATA_DIR}",
 }
 
-VOLUME_TO_ADD = "xmr_wallet:/root/xmr_wallet"
+VOLUME_TO_ADD = "${APP_MONERO_WALLET_DATA_DIR}:/wallet"
 
 def add_variables(service):
     if 'environment' not in service:
@@ -33,24 +32,24 @@ def remove_variables(service):
         if VOLUME_TO_ADD in service['volumes']:
             service['volumes'].remove(VOLUME_TO_ADD)
 
-def main(action):
+def main(action_param, compose_file_param):
     # Load the docker-compose.yml file
-    with open('docker-compose.yml', 'r', encoding='utf-8') as file:
+    with open(compose_file_param, 'r', encoding='utf-8') as file:
         docker_compose = yaml.safe_load(file)
 
     # Check if the btcpayserver service exists
     if 'web' in docker_compose['services']:
         service = docker_compose['services']['web']
-        if action == 'add':
+        if action_param == 'add':
             add_variables(service)
-        elif action == 'remove':
+        elif action_param == 'remove':
             remove_variables(service)
         else:
             print("Invalid action. Use 'add' or 'remove'.")
             return
 
         # Save the modified docker-compose.yml file
-        with open('docker-compose.yml', 'w', encoding='utf-8') as file:
+        with open(compose_file_param, 'w', encoding='utf-8') as file:
             yaml.dump(docker_compose, file, default_flow_style=False)
 
         print("docker-compose.yml updated successfully")
@@ -58,8 +57,9 @@ def main(action):
         print("BTCPayserver service not found in docker-compose.yml")
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python docker_gen.py <add|remove>")
+    if len(sys.argv) != 3:
+        print("Usage: python docker_gen.py <add|remove> <path_to_docker_compose>")
     else:
         action = sys.argv[1]
-        main(action)
+        compose_file = sys.argv[2]
+        main(action, compose_file)

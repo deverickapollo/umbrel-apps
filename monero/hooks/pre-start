@@ -1,6 +1,32 @@
 #!/usr/bin/env bash
 
-# Delay booting Monero until the RPC and P2P Tor Hidden Services are ready
+# Load the Umbrel environment variables
+if [ ! -z "$MONERO_BTCPAY_ENABLED" ]; then
+	python3 ${UMBREL_ROOT}/scripts/docker_gen_monero.py add
+	changed = $?
+	#we also need to cleanup the btcpay environment variables using docker_gen.py in the btcpay-server directory
+	python3 ../../btcpay-server/scripts/docker_gen.py add ../../btcpay-server/docker-compose.yml
+else
+	changed = python3 ${UMBREL_ROOT}/scripts/docker_gen_monero.py remove
+	changed = $?
+	#we also need to cleanup the btcpay environment variables using docker_gen.py in the btcpay-server directory
+	python3 ../../btcpay-server/scripts/docker_gen.py remove ../../btcpay-server/docker-compose.yml
+fi
+#print changed
+echo "Changed: ${changed}"
+# if changed, restart btcpay
+if [ "$changed" = true ]; then
+	# if old Umbrel OS version, restart btcpay using the old method
+	if [ -f "${UMBREL_ROOT}/scripts/app" ]; then
+		"${UMBREL_ROOT}/scripts/app" restart btcpay-server
+		# print error message to check if this works
+		echo "App: ${APP_ID} - Restarting BTCPay Server via old method..."
+	else
+		umbreld client apps.restart.mutate --appId btcpay-server
+		# print error message to check if this works
+		echo "App: ${APP_ID} - Restarting BTCPay Server via new method..."
+	fi
+fi
 
 HIDDEN_SERVICE_FILE="${TOR_DATA_DIR}/app-${APP_ID}-rpc/hostname"
 
@@ -8,11 +34,18 @@ if [[ -f "${HIDDEN_SERVICE_FILE}" ]]; then
 	exit
 fi
 
-"${UMBREL_ROOT}/scripts/app" compose "${APP_ID}" up --detach monerod
-"${UMBREL_ROOT}/scripts/app" compose "${APP_ID}" up --detach tor
+#check Umbrel OS version and start monerod and tor using the correct method
+if [ -f "${UMBREL_ROOT}/scripts/app" ]; then
+	"${UMBREL_ROOT}/scripts/app" compose "${APP_ID}" up --detach monerod
+	"${UMBREL_ROOT}/scripts/app" compose "${APP_ID}" up --detach tor
+else
+	/usr/local/lib/node_modules/umbreld/source/modules/apps/legacy-compat/app-script compose "${APP_ID}" up --detach monerod
+	/usr/local/lib/node_modules/umbreld/source/modules/apps/legacy-compat/app-script compose "${APP_ID}" up --detach tor
+fi
 
 echo "App: ${APP_ID} - Generating Tor Hidden Service..."
 
+# Delay booting Monero until the RPC and P2P Tor Hidden Services are ready
 for attempt in $(seq 1 100); do
 	if [[ -f "${HIDDEN_SERVICE_FILE}" ]]; then
 		echo "App: ${APP_ID} - Hidden service file created successfully!"
@@ -24,3 +57,6 @@ done
 if [[ ! -f "${HIDDEN_SERVICE_FILE}" ]]; then
 	echo "App: ${APP_ID} - Hidden service file wasn't created"
 fi
+
+
+

@@ -10,7 +10,15 @@ export APP_MONERO_RESTRICTED_RPC_PORT="18089"
 export APP_MONERO_P2P_PORT="18080"
 export APP_MONERO_TOR_PORT="9901"
 export APP_MONERO_WALLET_DATA_DIR="${EXPORTS_APP_DIR}/data/wallets"
-export APP_MONERO_WALLET_PORT="18082"
+export APP_MONERO_WALLET_PORT="18083"
+export MONERO_BTCPAY_ENABLED="false"
+
+#Check if  btcpay is enabled
+if [[ -f "${EXPORTS_APP_DIR}/data/app/monero-config.json" ]]; then
+	export MONERO_BTCPAY_ENABLED=$(jq -r '.btcpayEnabled' "${EXPORTS_APP_DIR}/data/app/monero-config.json")
+	#print the value
+	echo "MONERO_BTCPAY_ENABLED: ${MONERO_BTCPAY_ENABLED}"
+fi
 
 #temporarily set to mainnet
 MONERO_NETWORK="mainnet"
