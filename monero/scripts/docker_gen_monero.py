@@ -55,10 +55,10 @@ def update_monero_wallet_service(compose_file, action):
 def main():
     parser = argparse.ArgumentParser(description='Add or remove the Monero wallet service in docker-compose.yml.')
     parser.add_argument('action', choices=['add', 'remove'], help='Action to perform: add or remove the Monero wallet service')
+    parser.add_argument('compose_file', help='Path to the docker-compose.yml file')
     args = parser.parse_args()
-
-    compose_file = 'docker-compose.yml'
-    return update_monero_wallet_service(compose_file, args.action)
+    
+    return update_monero_wallet_service(args.compose_file, args.action)
 
 if __name__ == '__main__':
     sys.exit(main())
