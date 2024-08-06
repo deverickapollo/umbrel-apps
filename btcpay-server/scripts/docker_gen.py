@@ -7,10 +7,10 @@ environment_variables = {
     "BTCPAY_XMR_DAEMON_USERNAME": "${APP_MONERO_RPC_USER}",
     "BTCPAY_XMR_DAEMON_PASSWORD": "${APP_MONERO_RPC_PASS}",
     "BTCPAY_XMR_WALLET_DAEMON_URI": "http://${APP_MONERO_WALLET_IP}:${APP_MONERO_WALLET_PORT}",
-    "BTCPAY_XMR_WALLET_DAEMON_WALLETDIR": "${APP_MONERO_WALLET_DATA_DIR}",
+    "BTCPAY_XMR_WALLET_DAEMON_WALLETDIR": "/wallet/xmr_wallet",
 }
 
-VOLUME_TO_ADD = "${APP_MONERO_WALLET_DATA_DIR}:/wallet"
+VOLUME_TO_ADD = "${APP_MONERO_WALLET_DATA_DIR}:/wallet/xmr_wallet"
 
 def add_variables(service):
     if 'environment' not in service:
