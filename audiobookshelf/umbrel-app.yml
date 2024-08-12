@@ -3,7 +3,7 @@ id: audiobookshelf
 name: Audiobookshelf
 tagline: Audiobook and podcast server
 category: media
-version: "2.9.0"
+version: "2.12.1"
 port: 13378
 description: >-
   Features:
@@ -61,21 +61,62 @@ path: ""
 defaultUsername: ""
 defaultPassword: ""
 releaseNotes: >-
-  This release brings audiobookshelf from version 2.8.0 to 2.9.0. 
+  Added:
 
+    - Player setting to set skip forward/backward time
+    - “End of chapter” option for sleep timer
+    - Progress percentage for M4B merge and metadata embed tools
+    - Random sort for book/podcast library and series
+    - Support for accent-insensitive search
+    - Setting to show subtitles on book cards
 
-  Added
+  Fixed:
 
-  - Support for webp images in cbz/cbr comic files
+    - Filter data not populating when opening item page directly
+    - Podcast episode match not encoding search query
+    - Series and collection RSS feeds maintaining book order
+    - Server crash on duplicate series in OPF
+    - M4B merge and embed tools checking folder permissions and stripping file permissions
+    - Search query lost when switching libraries on the search page
+    - Backups not restoring properly
+    - Series & collection RSS feeds not setting cover image
+    - Media item shares duration limit increased
+    - Debian/PPA re-downloading ffmpeg/ffprobe on every reinstall
+    - Changelog not shown from settings page
+    - Series bookshelf row padding issue
 
-  - Podcast library filter for language 
+  Changed:
 
-  - Hebrew, Ukrainian, Bengali, Traditional Chinese, Estonian, Hungarian, Vietnamese translations
-  
+    - Debian package now downloads dependencies on server start
+    - Removed old ffmpeg/ffprobe location in Debian/PPA
+    - Global library search includes genres
+    - OPML import runs in the background to prevent timeouts
+    - Fetch more home page items on wide screens
+    - Backup settings allow unlimited size with “0”
+    - NFO metadata parser supports language
+    - Improved EPUB scanner for correct cover image and OPF metadata parsing
+    - M4B merge tool retains advanced encoding settings
+    - Logs added when an ebook is downloaded
+    - Replaced default session memorystore with stable memorystore
 
-  Plus many fixes and changes...
+  UI/UX Improvements:
 
-  
+    - Match tab supports clicking on current value to set it
+    - Simplified ItemSearchCard component logic
+    - Formatted numbers on user stats page based on locale
+    - Library stats page moved to library siderail (also in settings nav)
+    - Updated material icons font to material symbols
+
+  Translations:
+
+    - Dutch
+    - Finnish
+    - German
+    - Hebrew
+    - Italian
+    - Polish
+    - Ukrainian
+
   Full release notes can be found at https://github.com/advplyr/audiobookshelf/releases
 submitter: Jasper
 submission: https://github.com/getumbrel/umbrel-apps/pull/302

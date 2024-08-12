@@ -2,7 +2,7 @@ manifestVersion: 1
 id: memos
 category: files
 name: Memos
-version: "0.22.0"
+version: "0.22.4"
 tagline: Easily capture and share your great thoughts
 description: >-
   A privacy-first, lightweight note-taking service.
@@ -17,7 +17,14 @@ description: >-
   - Customize and share your notes effortlessly. With our intuitive sharing features, you can easily collaborate and distribute your notes with others.
 
   - RESTful API for third-party services. Embrace the power of integration and unleash new possibilities with our RESTful API support.
-releaseNotes: ""
+releaseNotes: >-
+  This update includes several enhancements and new features:
+  
+    - Support changing the date when editing memos.
+    - Added calendar view on Home page to better review recent activities.
+    - Removed the Timeline page.
+  
+  Full release notes are available at https://github.com/usememos/memos/releases
 developer: Memos
 website: https://www.usememos.com/
 dependencies: []

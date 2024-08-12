@@ -7,7 +7,7 @@ services:
       APP_PORT: 80
 
   server:
-    image: linuxserver/librespeed:5.3.0@sha256:69c23e3bb022a99c5b0d9717c97836574907226e861de94898ef483b1f9b5c0d
+    image: ghcr.io/librespeed/speedtest:5.4.0@sha256:98ddbdd5783165f37642458a40864899b09c439cc77f9d878a1e1833afe9256d
     environment:
       PUID: 1000
       PGID: 1000

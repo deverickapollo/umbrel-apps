@@ -2,7 +2,7 @@ manifestVersion: 1.1
 id: maybe
 category: finance
 name: Maybe
-version: 'v0.1.0-alpha.9'
+version: 'v0.1.0-alpha.12'
 tagline: The OS for your personal finances
 description: >-
   Maybe is a fully (your finances are secure) open-source OS for your personal finances built by
@@ -22,33 +22,19 @@ description: >-
 
   2. Add your Synth API key to the .env file at ~/umbrel/app-data/maybe/.env
 releaseNotes: >-
-  Improvements in this release:
-  
-
-  - Fixed decimal display for Euro currencies.
-
-  - Ability to edit transaction types and amounts.
-
-  - Fixed transactions being duplicated during import.
-
-  - Improved balance consistency after entering transactions.
-
-  - Improved account sychronization with one click.
-
-  - Enhanced button design for a more unified look.
-
-  - Improved account settings and transaction updates.
-
-  - Fixed several bugs to make the app run smoother.
-
-  - Toast notifications can now be closed on demand.
+  This update includes several bug fixes and improvements:
+    - Set last login time only on login instead of every action.
+    - Updated currency formatting in pie chart visualization.
+    - Implemented auto family syncs on login.
+    - Added basic portfolio views.
+    - Set minimum supported date for account entries.
 
 
-  Full release notes available at https://github.com/maybe-finance/maybe/releases/tag/v0.1.0-alpha.9
+  Full release notes are found at https://github.com/maybe-finance/maybe/releases.
 developer: Maybe
 website: https://maybe.co/
 dependencies: []
-repo: https://github.com/maybe-finance
+repo: https://github.com/maybe-finance/maybe
 support: https://github.com/maybe-finance/discussions
 port: 3063
 gallery:
