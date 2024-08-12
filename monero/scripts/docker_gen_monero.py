@@ -19,7 +19,7 @@ def update_monero_wallet_service(compose_file, action):
         'restart': 'unless-stopped',
         'container_name': 'btcpayserver_monero_wallet',
         'image': 'btcpayserver/monero:0.18.3.3',
-        'entrypoint': 'monero-wallet-rpc --rpc-bind-ip=0.0.0.0 --disable-rpc-login --confirm-external-bind --rpc-bind-port=18082 --non-interactive --trusted-daemon  --daemon-address=monerod:18081 --wallet-dir=/wallet --tx-notify="/bin/sh ./scripts/notifier.sh  -X GET http://btcpay-server_web_1:49392/monerolikedaemoncallback/tx?cryptoCode=xmr&hash=%s"',
+        'entrypoint': 'monero-wallet-rpc --daemon-login ${APP_MONERO_RPC_USER}:${APP_MONERO_RPC_PASS} --rpc-bind-ip=0.0.0.0 --disable-rpc-login --confirm-external-bind --rpc-bind-port=18082 --non-interactive --trusted-daemon  --daemon-address=monerod:18081 --wallet-dir=/wallet --tx-notify="/bin/sh ./scripts/notifier.sh  -X GET http://btcpay-server_web_1:3003/monerolikedaemoncallback/tx?cryptoCode=xmr&hash=%s"',
         'ports': [
             '${APP_MONERO_WALLET_PORT}:${APP_MONERO_WALLET_PORT}'
         ],
@@ -57,7 +57,7 @@ def main():
     parser.add_argument('action', choices=['add', 'remove'], help='Action to perform: add or remove the Monero wallet service')
     parser.add_argument('compose_file', help='Path to the docker-compose.yml file')
     args = parser.parse_args()
-    
+
     return update_monero_wallet_service(args.compose_file, args.action)
 
 if __name__ == '__main__':
