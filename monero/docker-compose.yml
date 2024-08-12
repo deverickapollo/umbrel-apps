@@ -53,18 +53,6 @@ services:
       default:
         ipv4_address: $APP_MONERO_NODE_IP
 
-  monerod_wallet:
-    restart: unless-stopped
-    container_name: btcpayserver_monero_wallet
-    image: btcpayserver/monero:0.18.3.3
-    entrypoint: monero-wallet-rpc --rpc-bind-ip=0.0.0.0 --disable-rpc-login --confirm-external-bind --rpc-bind-port=18082 --non-interactive --trusted-daemon  --daemon-address=monerod:18081 --wallet-dir=/wallet --tx-notify="/bin/sh ./scripts/notifier.sh  -X GET http://btcpay-server_web_1:49392/monerolikedaemoncallback/tx?cryptoCode=xmr&hash=%s"
-    expose:
-      - "18082"
-    volumes:
-       - "${APP_MONERO_WALLET_DATA_DIR}:/wallet"
-    depends_on:
-      - monerod
-
   tor:
     image: getumbrel/tor:0.4.7.8@sha256:2ace83f22501f58857fa9b403009f595137fa2e7986c4fda79d82a8119072b6a
     user: "1000:1000"
