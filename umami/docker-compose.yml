@@ -8,7 +8,7 @@ services:
       PROXY_AUTH_ADD: "false"
   
   app:
-    image: ghcr.io/umami-software/umami:postgresql-v2.12.1@sha256:11947e0ebc68a3bf3b774a0c655a016ae92b991975aade1ab955d75c27ef019d
+    image: ghcr.io/umami-software/umami:postgresql-v2.13.2@sha256:611cacc80f53fe289f7e7bfe301032a117fb57e790c37272ee05f3b0eba690a3
     user: "1000:1000"
     restart: on-failure
     stop_grace_period: 1m

@@ -2,7 +2,7 @@ manifestVersion: 1.1
 id: invoice-ninja
 category: finance
 name: Invoice Ninja
-version: "5.10.19"
+version: "5.10.27"
 tagline: We'll help with the invoicing
 description: >-
   Invoicing, Quotes, Expenses, Tasks.
@@ -21,7 +21,14 @@ gallery:
 - 3.jpg
 path: ''
 releaseNotes: >-
-  Improvements have been made to subscriptions and other minor fixes have been implemented.
+  This update includes several improvements and fixes:
+
+    - Improved sorting filters for expense payment dates
+    - Updated Rotessa payment flow
+    - Added reversal for failed BTC payments
+    - Updated template service properties
+    - Fixed issues with confirming gateway fees
+    - Removed PayPal Express and Omnipay
 
 
   Full release notes are available at https://github.com/invoiceninja/invoiceninja/releases.

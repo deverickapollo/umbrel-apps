@@ -22,7 +22,7 @@ services:
     entrypoint: memcached -m 256
 
   seafile:
-    image: seafileltd/seafile-mc:11.0.9@sha256:889b4cd1787f4f31f3eccb99922a83de69f74a48a862384bf13887649fd6455d
+    image: seafileltd/seafile-mc:11.0.12@sha256:d0c66e4621bd418b13dd545090ddb1eb82009db3cfb854f87f78c0b0ed6e5a73
     container_name: seafile
     volumes:
       - ${APP_DATA_DIR}/data/seafile-data:/shared

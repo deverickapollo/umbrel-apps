@@ -3,7 +3,7 @@ id: pocketbase
 name: PocketBase
 tagline: Open Source backend for your next SaaS and Mobile app in 1 file
 category: developer
-version: "0.22.18"
+version: "0.22.20"
 port: 5400
 description: >-
   PocketBase is an open source backend consisting of embedded database (SQLite) with realtime subscriptions, built-in auth management, convenient dashboard UI and simple REST-ish API.
@@ -41,7 +41,7 @@ gallery:
 path: /_/
 dependencies: []
 releaseNotes: >-
-  This update improves file delete performance when using the local filesystem.
+  This update fixes an issue with the Admin UI 'isEmpty' check, now allowing the submission of zero uuid, datetime, and date strings.
 
 
-  Full release notes are found at https://github.com/pocketbase/pocketbase/releases.
+  Full release notes are found at https://github.com/pocketbase/pocketbase/releases
