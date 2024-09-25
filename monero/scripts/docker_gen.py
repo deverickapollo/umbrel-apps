@@ -12,6 +12,8 @@ btcpay_environment_variables = {
 }
 
 btcpay_volume_to_add = "${APP_MONERO_WALLET_DATA_DIR}:/wallet/xmr_wallet"
+btcpay_image_altcoin = "btcpayserver/btcpayserver:1.13.1-altcoins"
+btcpay_image_default = "btcpayserver/btcpayserver:1.13.1@sha256:ee432e652e129d82a76e4de8ff28e90eb5476d01fcb008e3678991c52f5084e9"
 
 # Define the Monero wallet service
 monero_wallet_service = {
@@ -91,8 +93,12 @@ def main(action, service_type, compose_file):
             service = data['services']['web']
             if action == 'add':
                 changes = add_variables(service, btcpay_environment_variables, btcpay_volume_to_add)
+                service['image'] = btcpay_image_altcoin
+                service['environment']['BTCPAY_CHAINS'] = "btc,xmr"
             elif action == 'remove':
                 changes = remove_variables(service, btcpay_environment_variables, btcpay_volume_to_add)
+                service['image'] = btcpay_image_default
+                service['environment']['BTCPAY_CHAINS'] = "btc"
         else:
             print("BTCPayserver service not found in docker-compose.yml")
             return

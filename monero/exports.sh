@@ -16,7 +16,6 @@ export MONERO_BTCPAY_ENABLED="false"
 #Check if  btcpay is enabled
 if [[ -f "${EXPORTS_APP_DIR}/data/app/monero-config.json" ]]; then
 	export MONERO_BTCPAY_ENABLED=$(jq -r '.btcpayserver' "${EXPORTS_APP_DIR}/data/app/monero-config.json")
-	echo "MONERO_BTCPAY_ENABLED: ${MONERO_BTCPAY_ENABLED}"
 fi
 
 #temporarily set to mainnet

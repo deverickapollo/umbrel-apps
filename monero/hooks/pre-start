@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Load the monero-config.json file
-MONERO_APP_CONFIG_FILE_DEFAULT="${UMBREL_ROOT}/app-data/monero/data/app/monero-config.json"
+EXPORTS_APP_DIR="${UMBREL_ROOT}/app-data/monero"
 MONERO_APP_CONFIG_FILE="${EXPORTS_APP_DIR}/data/app/monero-config.json"
 PYYAML_SCRIPT="${EXPORTS_APP_DIR}/scripts/docker_gen.py"
 MONERO_DOCKER_COMPOSE_FILE="${EXPORTS_APP_DIR}/docker-compose.yml"
@@ -10,32 +10,32 @@ BTCPAY_DOCKER_COMPOSE_FILE="${UMBREL_ROOT}/app-data/btcpay-server/docker-compose
 #Check if  btcpay is enabled
 if [[ -f "$MONERO_APP_CONFIG_FILE" ]]; then
 	export MONERO_BTCPAY_ENABLED=$(jq -r '.btcpayserver' "${MONERO_APP_CONFIG_FILE}")
-	echo "MONERO_BTCPAY_ENABLED: ${MONERO_BTCPAY_ENABLED}"
 fi
 
 if [ "$MONERO_BTCPAY_ENABLED" == "true" ]; then
-	python3 ${PYYAML_SCRIPT} add monero ${MONERO_DOCKER_COMPOSE_FILE}
+	python3 ${PYYAML_SCRIPT} add monero ${BTCPAY_DOCKER_COMPOSE_FILE}
 	changed=$?
-	# jq '.btcpayserver_install="false"' ${MONERO_APP_CONFIG_FILE} > temp.json && mv temp.json ${MONERO_APP_CONFIG_FILE}
 	python3 ${PYYAML_SCRIPT} add btcpay ${BTCPAY_DOCKER_COMPOSE_FILE}
 elif [ "$MONERO_BTCPAY_ENABLED" == "false"  ]; then
-	python3 ${PYYAML_SCRIPT} remove monero ${MONERO_DOCKER_COMPOSE_FILE}
+	python3 ${PYYAML_SCRIPT} remove monero ${BTCPAY_DOCKER_COMPOSE_FILE}
 	changed=$?
 	python3 ${PYYAML_SCRIPT} remove btcpay ${BTCPAY_DOCKER_COMPOSE_FILE}
 fi
-#print changed
-echo "Changed: ${changed}"
+
 # if changed, restart btcpay
 if [ "$changed" -eq 1 ]; then
-	# if old Umbrel OS version, restart btcpay using the old method
-	if [ -f /usr/local/lib/node_modules/umbreld/source/modules/apps/legacy-compat/app-script ]; then
+	# check if umbreld exists, otherwise use the old method
+	if command -v umbreld &> /dev/null; then
+		umbreld client apps.restart.mutate --appId btcpay-server
+
+		# print error message to check if this works
+		echo "App: ${APP_ID} - Restarting BTCPay Server via new method..."
+		umbreld client apps.restart.mutate --appId monero
+	else
 		/usr/local/lib/node_modules/umbreld/source/modules/apps/legacy-compat/app-script restart btcpay-server
 		# print error message to check if this works
 		echo "App: ${APP_ID} - Restarting BTCPay Server via old method..."
-	else
-		umbreld client apps.restart.mutate --appId btcpay-server
-		# print error message to check if this works
-		echo "App: ${APP_ID} - Restarting BTCPay Server via new method..."
+		/usr/local/lib/node_modules/umbreld/source/modules/apps/legacy-compat/app-script restart monero
 	fi
 fi
 
@@ -51,10 +51,6 @@ fi
 if [ -f /usr/local/lib/node_modules/umbreld/source/modules/apps/legacy-compat/app-script ]; then
 	/usr/local/lib/node_modules/umbreld/source/modules/apps/legacy-compat/app-script compose "${APP_ID}" up --detach monerod
 	/usr/local/lib/node_modules/umbreld/source/modules/apps/legacy-compat/app-script compose "${APP_ID}" up --detach tor
-else
-	/usr/local/lib/node_modules/umbreld/source/modules/apps/legacy-compat/app-script compose "${APP_ID}" up --detach monerod
-	/usr/local/lib/node_modules/umbreld/source/modules/apps/legacy-compat/app-script compose "${APP_ID}" up --detach tor
-fi
 
 echo "App: ${APP_ID} - Generating Tor Hidden Service..."
 
