@@ -2,7 +2,7 @@ manifestVersion: 1.1
 id: navidrome
 category: media
 name: Navidrome
-version: "0.52.5-hotfix"
+version: "0.53.2"
 tagline: Your personal streaming service
 description: >-
   Navidrome is an open source web-based music collection server and streamer.
@@ -51,7 +51,15 @@ path: ""
 permissions:
   - STORAGE_DOWNLOADS
 releaseNotes: >-
-  This is a hotfix release to ensure that the main music folder has the correct permissions set to allow proper access to the music files.
-  There are no new features or bug fixes in this release.
+  This release includes several improvements and bug fixes:
+
+    - Added Serbian translation and updated German and Korean translations
+    - Improved M3U playlist import times
+    - Fixed issues with play queue, random albums, and album sorting
+    - Enhanced UI with updates to the Nuclear theme and album list randomization
+    - Improved Subsonic API compatibility
+
+
+  Full release notes can be found at https://github.com/navidrome/navidrome/releases
 submitter: owmsoton
 submission: https://github.com/getumbrel/umbrel-apps/pull/1232
