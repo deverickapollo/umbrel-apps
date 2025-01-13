@@ -2,7 +2,7 @@ manifestVersion: 1
 id: ghostfolio
 category: finance
 name: Ghostfolio
-version: "2.109.0"
+version: "2.132.0"
 tagline: Manage your wealth like a boss
 description: >-
   Ghostfolio is a privacy-first, open source dashboard for your personal finances.
@@ -31,12 +31,11 @@ path: ""
 deterministicPassword: false
 torOnly: false
 releaseNotes: >
-  This release includes several improvements:
-    - Extended the Public API with a new endpoint for portfolio performance metrics
-    - Added portfolio performance metrics to the public page
-    - Improved usability of the create or update access dialog
-    - Improved loading indicator of the accounts table
-    - Improved language localization for German and Polish
+  This release includes improvements to the application:
+    - Added user interface for managing access shared by others
+    - Improved automatic cleanup of unused asset profiles
+    - Enhanced German language support
+    - Fixed issues with the Twitter bot service
 
 
   Full release notes are found at https://github.com/ghostfolio/ghostfolio/releases.

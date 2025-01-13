@@ -2,7 +2,7 @@ manifestVersion: 1
 id: syncthing
 category: files
 name: Syncthing
-version: "1.27.12"
+version: "1.29.1"
 tagline: Peer-to-peer file synchronization between your devices
 description: >-
   Syncthing is a peer-to-peer continuous file synchronization
@@ -26,8 +26,13 @@ gallery:
 path: ""
 defaultPassword: ""
 releaseNotes: >-
-  This release includes minor improvements and bug fixes:
-    - Fixed an issue where desktop clients claimed there were Local Additions for all folders from Android v1.27.10
+  This release includes bug fixes and improvements:
+    - Fixed issues with socket file handling on Linux systems
+    - Improved GUI address handling for Unix sockets
+    - Enhanced folder synchronization behavior
+    - Clarified system log messages
+    - Fixed web interface login and stability issues
+    - Important API changes for developers
 
 
   Full release notes can be found at https://github.com/syncthing/syncthing/releases

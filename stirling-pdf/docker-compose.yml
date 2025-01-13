@@ -8,7 +8,7 @@ services:
       PROXY_AUTH_WHITELIST: "/api/*"
   
   app:
-    image: frooodle/s-pdf:0.29.0@sha256:5b9c9443e6eb0fa23b39475d68741d80826249193df231d6859ecda0f0aedd8d
+    image: stirlingtools/stirling-pdf:0.36.6@sha256:05b680a2dfb127b31f4b4e3d04637bee2fd84e9005b96f0e32c639e61ca6039e
     # Stirling PDF does not work with a custom user
     #user: "1000:1000"
     restart: on-failure
