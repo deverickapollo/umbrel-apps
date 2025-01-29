@@ -20,7 +20,7 @@ monero_wallet_service = {
     'restart': 'unless-stopped',
     'container_name': 'btcpayserver_monero_wallet',
     'image': 'btcpayserver/monero:0.18.3.3',
-    'entrypoint': 'monero-wallet-rpc --daemon-login ${APP_MONERO_RPC_USER}:${APP_MONERO_RPC_PASS} --rpc-bind-ip=0.0.0.0 --disable-rpc-login --confirm-external-bind --rpc-bind-port=18082 --non-interactive --trusted-daemon  --daemon-address=monerod:18081 --wallet-dir=/wallet --tx-notify="/bin/sh ./scripts/notifier.sh  -X GET http://btcpay-server_web_1:3003/monerolikedaemoncallback/tx?cryptoCode=xmr&hash=%s"',
+    'entrypoint': 'monero-wallet-rpc --daemon-login ${APP_MONERO_RPC_USER}:${APP_MONERO_RPC_PASS} --rpc-bind-ip=0.0.0.0 --disable-rpc-login --confirm-external-bind --rpc-bind-port=18082 --non-interactive --trusted-daemon  --daemon-address=monero_monerod_1:18081 --wallet-dir=/wallet --tx-notify="/bin/sh ./scripts/notifier.sh  -X GET http://btcpay-server_web_1:3003/monerolikedaemoncallback/tx?cryptoCode=xmr&hash=%s"',
     'ports': [
         '${APP_MONERO_WALLET_PORT}:${APP_MONERO_WALLET_PORT}'
     ],
@@ -33,6 +33,29 @@ monero_wallet_service = {
     'networks': {
         'default': {
             'ipv4_address': '$APP_MONERO_WALLET_IP'
+        }
+    }
+}
+
+# Define the p2pool service
+p2pool_service = {
+    'restart': 'unless-stopped',
+    'container_name': 'p2pool',
+    'image': 'ghcr.io/sethforprivacy/p2pool:latest',
+    'tty': True,
+    'stdin_open': True,
+    'volumes': [
+        'p2pool-data:/home/p2pool',
+        '/dev/hugepages:/dev/hugepages:rw'
+    ],
+    'ports': [
+        '3333:3333',
+        '37889:37889'
+    ],
+    'command': '--wallet "{APP_MONERO_WALLET_PORT}" --stratum "0.0.0.0:3333" --p2p "0.0.0.0:37889" --zmq-port "${APP_MONERO_ZMQ_PORT}" --loglevel "0" --addpeers "65.21.227.114:37889,node.sethforprivacy.com:37889" --host "monero_monerod_1" --rpc-port "${APP_MONERO_RPC_PORT}"',
+    'networks': {
+        'default': {
+            'ipv4_address': '$APP_P2POOL_IP'
         }
     }
 }
@@ -84,6 +107,19 @@ def update_monero_wallet_service(data, action):
 
     return changes
 
+def update_p2pool_service(data, action):
+    changes = False
+    if action == 'add':
+        if 'p2pool' not in data['services']:
+            data['services']['p2pool'] = p2pool_service
+            changes = True
+    elif action == 'remove':
+        if 'p2pool' in data['services']:
+            data['services'].pop('p2pool', None)
+            changes = True
+
+    return changes
+
 def main(action, service_type, compose_file):
     data = load_yaml(compose_file)
     changes = False
@@ -117,7 +153,7 @@ def main(action, service_type, compose_file):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Add or remove services in docker-compose.yml.')
     parser.add_argument('action', choices=['add', 'remove'], help='Action to perform: add or remove the service')
-    parser.add_argument('service_type', choices=['btcpay', 'monero'], help='Service type to update: btcpay or monero')
+    parser.add_argument('service_type', choices=['btcpay', 'monero', 'p2pool'], help='Service type to update: btcpay, monero or p2pool')
     parser.add_argument('compose_file', help='Path to the docker-compose.yml file')
     args = parser.parse_args()
 

@@ -10,6 +10,7 @@ BTCPAY_DOCKER_COMPOSE_FILE="${UMBREL_ROOT}/app-data/btcpay-server/docker-compose
 #Check if  btcpay is enabled
 if [[ -f "$MONERO_APP_CONFIG_FILE" ]]; then
 	export MONERO_BTCPAY_ENABLED=$(jq -r '.btcpayserver' "${MONERO_APP_CONFIG_FILE}")
+	export MONERO_P2POOL_ENABLED=$(jq -r '.p2pool' "${MONERO_APP_CONFIG_FILE}")
 fi
 
 if [ "$MONERO_BTCPAY_ENABLED" == "true" ]; then
@@ -20,6 +21,15 @@ elif [ "$MONERO_BTCPAY_ENABLED" == "false"  ]; then
 	python3 ${PYYAML_SCRIPT} remove monero ${BTCPAY_DOCKER_COMPOSE_FILE}
 	changed=$?
 	python3 ${PYYAML_SCRIPT} remove btcpay ${BTCPAY_DOCKER_COMPOSE_FILE}
+fi
+
+
+if [ "$MONERO_P2POOL_ENABLED" == "true" ]; then
+	python3 ${PYYAML_SCRIPT} add p2pool ${MONERO_DOCKER_COMPOSE_FILE}
+	p2poolchanged=$?
+elif [ "$MONERO_P2POOL_ENABLED" == "false"  ]; then
+	python3 ${PYYAML_SCRIPT} remove p2pool ${MONERO_DOCKER_COMPOSE_FILE}
+	p2poolchanged=$?
 fi
 
 # if changed, restart btcpay
