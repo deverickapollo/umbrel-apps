@@ -9,7 +9,7 @@ services:
       PROXY_AUTH_WHITELIST: "/public/*"
   
   web:
-    image: nodered/node-red:4.0.2@sha256:fa8fbcf2ddc1e1b2cdea3c1e6d027413f583956fc499289c432650a3ea03c10b
+    image: nodered/node-red:4.0.8@sha256:871225abb46d62e434c75c73ec264c406ae1d0ea09b365ed9ffa122fdc327879
     restart: on-failure
     stop_grace_period: 1m
     volumes:

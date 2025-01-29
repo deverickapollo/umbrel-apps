@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   server:
-    image: linuxserver/plex:1.40.4@sha256:e06a8af0b30250f4efd8392b55a3d56578919f94fa2ac9eaee14998f9d22af56
+    image: linuxserver/plex:1.41.3@sha256:dda062ebde8c619a656f7ed6e6da7885ca7e114536c1e76b1de3e32a57d3597b
     restart: on-failure
     hostname: "${DEVICE_HOSTNAME}"
     network_mode: host

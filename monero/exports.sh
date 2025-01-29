@@ -65,6 +65,18 @@ if [[ ! -f "${MONERO_ENV_FILE}" ]]; then
 	echo "export APP_MONERO_RPC_PASS='${MONERO_RPC_PASS}'"	>> "${MONERO_ENV_FILE}"
 	echo "export APP_MONERO_RPC_AUTH='${MONERO_RPC_AUTH}'"	>> "${MONERO_ENV_FILE}"
 fi
+# Reset password if PASSWORD_RESET is set
+PASSWORD_RESET=$(jq -r '.resetPassword' "${EXPORTS_APP_DIR}/data/app/monero-config.json")
+
+if [[ "${PASSWORD_RESET}" == "true" ]]; then
+	MONERO_RPC_USER="monero"
+	MONERO_RPC_DETAILS=$("${EXPORTS_APP_DIR}/scripts/rpcauth.py" "${MONERO_RPC_USER}")
+	MONERO_RPC_PASS=$(echo "$MONERO_RPC_DETAILS" | tail -1)
+	MONERO_RPC_AUTH=$(echo "$MONERO_RPC_DETAILS" | head -2 | tail -1 | sed -e "s/^rpc-login=//")
+	echo "export APP_MONERO_RPC_PASS='${MONERO_RPC_PASS}'"	>> "${MONERO_ENV_FILE}"
+	echo "export APP_MONERO_RPC_AUTH='${MONERO_RPC_AUTH}'"	>> "${MONERO_ENV_FILE}"
+	jq '.resetPassword = false' "${EXPORTS_APP_DIR}/data/app/monero-config.json" > "${EXPORTS_APP_DIR}/data/app/monero-config.json.tmp" && mv "${EXPORTS_APP_DIR}/data/app/monero-config.json.tmp" "${EXPORTS_APP_DIR}/data/app/monero-config.json"
+fi
 
 . "${MONERO_ENV_FILE}"
 

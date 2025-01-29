@@ -8,7 +8,7 @@ services:
       PROXY_AUTH_ADD: "false"
 
   server:
-    image: linuxserver/jellyfin:10.9.9@sha256:88db4425a59157eba4b0fba8feb7df22a747a8134bb4d898070ef662f2c09b66
+    image: linuxserver/jellyfin:10.10.4@sha256:874f2e88485807a6b2f43a93a45f1a2007ba04006e9a96afb80ba15a95eafbb1
     restart: on-failure
     hostname: "${DEVICE_HOSTNAME}"
     environment:

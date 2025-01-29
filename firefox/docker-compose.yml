@@ -7,7 +7,7 @@ services:
       APP_PORT: 3000
 
   server:
-    image: linuxserver/firefox:126.0.1@sha256:b9eb0a238bf941a65674bf97287e14c6cbe31e361af1d9426857213e58a3b179
+    image: linuxserver/firefox:134.0.2@sha256:cd84ed6e5a6bce13a86a2f41b1fbb7246647713b84aba0c724c0159d162afdf3
     restart: on-failure
     environment:
       - PUID=1000
