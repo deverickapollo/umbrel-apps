@@ -1,23 +1,26 @@
 #!/usr/bin/env bash
 
-# Load the monero-config.json file
 EXPORTS_APP_DIR="${UMBREL_ROOT}/app-data/monero"
 MONERO_APP_CONFIG_FILE="${EXPORTS_APP_DIR}/data/app/monero-config.json"
 PYYAML_SCRIPT="${EXPORTS_APP_DIR}/scripts/docker_gen.py"
 MONERO_DOCKER_COMPOSE_FILE="${EXPORTS_APP_DIR}/docker-compose.yml"
 BTCPAY_DOCKER_COMPOSE_FILE="${UMBREL_ROOT}/app-data/btcpay-server/docker-compose.yml"
 
+MONERO_BTCPAY_ENABLED="false"
+MONERO_P2POOL_ENABLED="false"
+
+
 #Check if  btcpay is enabled
-if [[ -f "$MONERO_APP_CONFIG_FILE" ]]; then
-	export MONERO_BTCPAY_ENABLED=$(jq -r '.btcpayserver' "${MONERO_APP_CONFIG_FILE}")
-	export MONERO_P2POOL_ENABLED=$(jq -r '.p2pool' "${MONERO_APP_CONFIG_FILE}")
+if [[ -f "${MONERO_APP_CONFIG_FILE}" ]]; then
+	MONERO_BTCPAY_ENABLED=$(jq -r '.btcpayEnabled' "${MONERO_APP_CONFIG_FILE}")
+	MONERO_P2POOL_ENABLED=$(jq -r '.p2pool' "${MONERO_APP_CONFIG_FILE}")
 fi
 
-if [ "$MONERO_BTCPAY_ENABLED" == "true" ]; then
+if [ "${MONERO_BTCPAY_ENABLED}" == "true" ]; then
 	python3 ${PYYAML_SCRIPT} add monero ${BTCPAY_DOCKER_COMPOSE_FILE}
 	changed=$?
 	python3 ${PYYAML_SCRIPT} add btcpay ${BTCPAY_DOCKER_COMPOSE_FILE}
-elif [ "$MONERO_BTCPAY_ENABLED" == "false"  ]; then
+elif [ "${MONERO_BTCPAY_ENABLED}" == "false"  ]; then
 	python3 ${PYYAML_SCRIPT} remove monero ${BTCPAY_DOCKER_COMPOSE_FILE}
 	changed=$?
 	python3 ${PYYAML_SCRIPT} remove btcpay ${BTCPAY_DOCKER_COMPOSE_FILE}

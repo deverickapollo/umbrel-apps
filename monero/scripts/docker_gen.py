@@ -1,6 +1,24 @@
 import sys
 import yaml
 import argparse
+# import logging
+# import os
+
+# log_directory = '/home/umbrel/umbrel/app-data/monero/data/log'
+# os.makedirs(log_directory, exist_ok=True)
+
+# log_file_path = os.path.join(log_directory, "docker_gen.log")
+
+# # Configure logging
+# logging.basicConfig(
+#     level=logging.DEBUG,  # Set the log level to DEBUG to capture all types of log messages
+#     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',  # Define the log message format
+#     handlers=[
+#         logging.FileHandler(log_file_path)  # Log to a file
+#     ]
+# )
+
+# logger = logging.getLogger(__name__)
 
 # Define the environment variables and volume to add/remove for BTCPay
 btcpay_environment_variables = {
@@ -20,7 +38,7 @@ monero_wallet_service = {
     'restart': 'unless-stopped',
     'container_name': 'btcpayserver_monero_wallet',
     'image': 'btcpayserver/monero:0.18.3.3',
-    'entrypoint': 'monero-wallet-rpc --daemon-login ${APP_MONERO_RPC_USER}:${APP_MONERO_RPC_PASS} --rpc-bind-ip=0.0.0.0 --disable-rpc-login --confirm-external-bind --rpc-bind-port=18082 --non-interactive --trusted-daemon  --daemon-address=monero_monerod_1:18081 --wallet-dir=/wallet --tx-notify="/bin/sh ./scripts/notifier.sh  -X GET http://btcpay-server_web_1:3003/monerolikedaemoncallback/tx?cryptoCode=xmr&hash=%s"',
+    'entrypoint': 'monero-wallet-rpc --daemon-login=${APP_MONERO_RPC_USER}:${APP_MONERO_RPC_PASS} --rpc-bind-ip=0.0.0.0 --disable-rpc-login --log-level=2 --confirm-external-bind --rpc-bind-port=18082 --non-interactive --trusted-daemon  --daemon-address=monero_monerod_1:18081 --wallet-dir=/wallet --tx-notify="/bin/sh ./scripts/notifier.sh  -X GET http://btcpay-server_web_1:3003/monerolikedaemoncallback/tx?cryptoCode=xmr&hash=%s"',
     'ports': [
         '${APP_MONERO_WALLET_PORT}:${APP_MONERO_WALLET_PORT}'
     ],
@@ -30,6 +48,7 @@ monero_wallet_service = {
     'depends_on': [
         'monerod'
     ],
+    'user': '1000:1000',
     'networks': {
         'default': {
             'ipv4_address': '$APP_MONERO_WALLET_IP'
@@ -45,14 +64,14 @@ p2pool_service = {
     'tty': True,
     'stdin_open': True,
     'volumes': [
-        'p2pool-data:/home/p2pool',
+        '${APP_DATA_DIR}/data/p2pool:/home/p2pool',
         '/dev/hugepages:/dev/hugepages:rw'
     ],
     'ports': [
         '3333:3333',
         '37889:37889'
     ],
-    'command': '--wallet "{APP_MONERO_WALLET_PORT}" --stratum "0.0.0.0:3333" --p2p "0.0.0.0:37889" --zmq-port "${APP_MONERO_ZMQ_PORT}" --loglevel "0" --addpeers "65.21.227.114:37889,node.sethforprivacy.com:37889" --host "monero_monerod_1" --rpc-port "${APP_MONERO_RPC_PORT}"',
+    'command': '--wallet "${APP_MONERO_WALLET}" --host ${APP_MONERO_NODE_IP} --stratum "0.0.0.0:3333" --rpc-login "${APP_MONERO_RPC_USER}:${APP_MONERO_RPC_PASS}" --p2p "0.0.0.0:37889" --zmq-port "${APP_MONERO_ZMQ_PORT}" --addpeers "65.21.227.114:37889,node.sethforprivacy.com:37889" --rpc-port "${APP_MONERO_RPC_PORT}"  --light-mode  --loglevel "2" --mini',
     'networks': {
         'default': {
             'ipv4_address': '$APP_P2POOL_IP'
@@ -138,10 +157,12 @@ def main(action, service_type, compose_file):
         else:
             print("BTCPayserver service not found in docker-compose.yml")
             return
+    elif service_type == 'p2pool':
+        changes = update_p2pool_service(data, action)
     elif service_type == 'monero':
         changes = update_monero_wallet_service(data, action)
     else:
-        print("Invalid service type. Use 'btcpay' or 'monero'.")
+        print("Invalid service type. Use 'btcpay', p2pool, or 'monero'.")
         return
 
     if changes:
