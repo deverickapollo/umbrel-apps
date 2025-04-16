@@ -2,7 +2,7 @@ manifestVersion: 1.1
 id: monero
 category: finance
 name: Monero Node
-version: "0.18.3.4"
+version: "0.18.4.0"
 tagline: Run a monero node
 description: >-
   Run your monero node and independently store and validate every single Monero transaction with it.
@@ -23,11 +23,15 @@ gallery:
 path: ""
 defaultPassword: ""
 releaseNotes: >-
-  Highlights:
-    - Support for locked transfers has been removed.
-    - The daemon now skips privacy networks that lack outgoing connections.
-    - Improvements to the daemon include preventing duplicate transactions in the fluff queue and fixing unintended disconnections.
-    - Resolved bugs in the daemon’s ZMQ DaemonInfo functionality.
-    - Fixed an issue with the stagenet wallet restore height estimate.
-    - Added support for Ledger Flex in the wallet.
-    - Resolved a bug in the log rotation mechanism.
+  This is a recommended release that fixes multiple daemon-related (monerod) network vulnerabilities.
+
+
+  Some highlights of this release are:
+    - reduce disk writes from 2 to 1 per transaction
+    - fix temp fails causing alt blocks to be permanently invalid
+    - fix daemon connection speed throttling incorrectly
+    - fix --anonymous-inbound data leak
+    - update seed nodes
+    - minor bug fixes and improvements
+
+  Further details can be found at https://www.getmonero.org/2025/04/05/monero-0.18.4.0-released.html

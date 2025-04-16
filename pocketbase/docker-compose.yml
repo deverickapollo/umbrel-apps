@@ -8,7 +8,7 @@ services:
       PROXY_AUTH_ADD: "false"
   
   app:
-    image: ghcr.io/muchobien/pocketbase:0.24.4@sha256:077420e5564262ea044f71d94398ea271dc65420bfe600d84dc3dda89eb09173
+    image: ghcr.io/muchobien/pocketbase:0.26.6@sha256:adb625bbcf260a8d2a596a3ae4b32ac87f2ecb2a03096ba084db1c3fde7eaa04
     # pocketbase needs to run as root
     # user: "1000:1000"
     restart: on-failure

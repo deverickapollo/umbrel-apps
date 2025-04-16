@@ -6,7 +6,7 @@ services:
       APP_HOST: zoraxy_server_1
       APP_PORT: 8000
   server:
-    image: zoraxydocker/zoraxy:v3.1.2@sha256:38f23c5a507542bbd6eac0492bf6456be2004015594ca270a1a5998c8a377b74
+    image: zoraxydocker/zoraxy:v3.1.9@sha256:725929655d5dc817ff287097813b0ffc29e3f68f8a0702ad1f545e1bce961173
     restart: on-failure
     ports:
       - 41080:80
