@@ -15,7 +15,7 @@ services:
 
   db:
     image: docker.io/library/postgres:16@sha256:46aa2ee5d664b275f05d1a963b30fff60fb422b4b594d509765c42db46d48881
-    restart: unless-stopped
+    restart: on-failure
     volumes:
       - ${APP_DATA_DIR}/data/pgdata:/var/lib/postgresql/data
     environment:
@@ -24,7 +24,7 @@ services:
       POSTGRES_PASSWORD: paperless
 
   webserver:
-    image: ghcr.io/paperless-ngx/paperless-ngx:2.14.5@sha256:0dd05692644ab4e052aa9f0e3029436ca77b0385453ec7a6c8f8785ae2179c02
+    image: ghcr.io/paperless-ngx/paperless-ngx:2.15.2@sha256:80d1a7fe4f638cb00c1dcf5ff4ce2c15d92f13a6287db1e1b94f58c35a689e47
     restart: on-failure
     depends_on:
       - db

@@ -2,7 +2,7 @@ manifestVersion: 1
 id: adguard-home
 category: networking
 name: AdGuard Home
-version: "0.107.56"
+version: "0.107.60"
 tagline: Network-wide software for blocking ads and tracking
 description: >-
   ⚠️ See below for important set-up instructions.
@@ -21,10 +21,10 @@ description: >-
 releaseNotes: >-
   This release includes security improvements and bug fixes:
 
-    - Updated core components to address security vulnerabilities
-    - Improved formatting of large numbers on the dashboard
-    - Enhanced client request tracking functionality
-    - Fixed various performance and stability issues
+    - Updated Go version to address security vulnerabilities
+    - Fixed filtering for DHCP clients
+    - Improved validation for HTTPS port on Encryption Settings page
+    - Updated Alpine Linux version in Docker image
 
 
   Full release notes can be found at https://github.com/AdguardTeam/AdGuardHome/releases

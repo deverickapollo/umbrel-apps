@@ -7,7 +7,7 @@ services:
       APP_PORT: 80
 
   web:
-    image: vectorim/element-web:v1.11.90@sha256:953b93ff9036e1af89044c5538c4b2ecbf287f1319122786ea37c7c8a2a1fe85
+    image: vectorim/element-web:v1.11.97@sha256:656e44fbab4cc61e0e9154273d073d6713ce82f13ee28715df006099880d7d67
     # NGINX parent container requires root
     # user: "1000:1000"
     restart: on-failure
