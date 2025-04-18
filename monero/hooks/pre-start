@@ -16,6 +16,7 @@ if [[ -f "${MONERO_APP_CONFIG_FILE}" ]]; then
 	MONERO_P2POOL_ENABLED=$(jq -r '.p2pool' "${MONERO_APP_CONFIG_FILE}")
 fi
 
+
 if [ "${MONERO_BTCPAY_ENABLED}" == "true" ]; then
 	python3 ${PYYAML_SCRIPT} add monero ${BTCPAY_DOCKER_COMPOSE_FILE}
 	changed=$?
@@ -52,15 +53,12 @@ if [ "$changed" -eq 1 ]; then
 	fi
 fi
 
-# Delay booting Monero until the RPC and P2P Tor Hidden Services are ready
-
 HIDDEN_SERVICE_FILE="${TOR_DATA_DIR}/app-${APP_ID}-rpc/hostname"
 
 if [[ -f "${HIDDEN_SERVICE_FILE}" ]]; then
 	exit
 fi
 
-#check Umbrel OS version and start monerod and tor using the correct method
 if [ -f /usr/local/lib/node_modules/umbreld/source/modules/apps/legacy-compat/app-script ]; then
 	/usr/local/lib/node_modules/umbreld/source/modules/apps/legacy-compat/app-script compose "${APP_ID}" up --detach monerod
 	/usr/local/lib/node_modules/umbreld/source/modules/apps/legacy-compat/app-script compose "${APP_ID}" up --detach tor

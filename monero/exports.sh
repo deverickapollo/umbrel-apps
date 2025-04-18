@@ -17,6 +17,7 @@ export APP_MONERO_TOR_PORT="9901"
 export MONERO_BTCPAY_ENABLED="false"
 export MONERO_P2POOL_ENABLED="false"
 export MONERO_ZMQ_ENABLED="false"
+
 export APP_MONERO_WALLET=""
 
 #Check if  btcpay or p2pool is enabled
@@ -24,7 +25,10 @@ if [[ -f "${EXPORTS_APP_DIR}/data/app/monero-config.json" ]]; then
 	MONERO_BTCPAY_ENABLED=$(jq -r '.btcpayEnabled' "${EXPORTS_APP_DIR}/data/app/monero-config.json")
 	MONERO_P2POOL_ENABLED=$(jq -r '.p2pool' "${EXPORTS_APP_DIR}/data/app/monero-config.json")
 	MONERO_ZMQ_ENABLED=$(jq -r '.zmq' "${EXPORTS_APP_DIR}/data/app/monero-config.json")
-	export APP_MONERO_WALLET=$(jq -r '.moneroAddress' "${EXPORTS_APP_DIR}/data/app/monero-config.json")
+	# Set wallet address if p2pool is enabled
+	if [[ "${MONERO_P2POOL_ENABLED}" == "true" ]]; then
+		export APP_MONERO_WALLET=$(jq -r '.moneroAddress' "${EXPORTS_APP_DIR}/data/app/monero-config.json")
+	fi
 fi
 
 
