@@ -2,7 +2,7 @@ manifestVersion: 1
 id: element
 category: social
 name: Element
-version: "1.11.97"
+version: "1.11.100"
 tagline: A glossy Matrix client compatible with Synapse
 description: >-
   Element is a new type of messaging app. You choose where your messages are stored, putting you in control of your data.
@@ -46,10 +46,13 @@ submitter: Umbrel
 submission: https://github.com/getumbrel/umbrel/commit/bb10e17a6256db19767af7eaeb93d665ac275b24
 releaseNotes: >-
   Some key highlights in this release include:
-    - Improved room list functionality with sorting, filtering, and notification decorations
-    - Added ability to hide images and videos after clicking "show"
-    - Enhanced accessibility for checkboxes and labels
-    - Improved error handling and user experience in various areas
+    - Rich topics are now out of labs and stable
+    - Added message preview support to the new room list
+    - Improved global configuration for media previews
+    - Enhanced keyboard shortcuts support for the new room list
+    - Updated room summary card with MVVM implementation for topics
+    - Improved visual design for invitations in the new room list
+    - Various bug fixes and improvements to the user interface
 
 
   Full release notes can be found at https://github.com/vector-im/element-web/releases

@@ -2,7 +2,7 @@ manifestVersion: 1.1
 id: invoice-ninja
 category: finance
 name: Invoice Ninja
-version: "5.11.67"
+version: "5.11.77"
 tagline: We'll help with the invoicing
 description: >-
   Invoicing, Quotes, Expenses, Tasks.
@@ -21,13 +21,7 @@ gallery:
 - 3.jpg
 path: ''
 releaseNotes: >-
-  This release includes improvements and fixes:
-    - Improved locale handling for imports
-    - Enhanced JSON quality checks
-    - Reduced API calls to payment providers
-    - Updates for EPC and tax summary reports
-    - Performance improvements and tracing
-    - New health route for system checks
+  This release includes various improvements and bug fixes.
 
 
   Full release notes are available at https://github.com/invoiceninja/invoiceninja/releases
