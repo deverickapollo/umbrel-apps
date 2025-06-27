@@ -3,7 +3,7 @@ id: open-webui
 name: Open WebUI
 tagline: Chat with Ollama models like DeepSeek-R1 and LLama, or use an OpenAI API key
 category: ai
-version: "0.6.9"
+version: "0.6.15"
 port: 2876
 description: >-
   Open WebUI lets you chat with advanced AI models running locally on your own device or connect to online models using an API key.
@@ -38,16 +38,18 @@ dependencies:
   - ollama
 releaseNotes: >-
   Key highlights in this release include:
-    - Edit attached images/files in messages
-    - Clear alerts for private task models
-    - Improved confirmation dialog focus
-    - Enhanced temporary chat admin controls
-    - External Reranker for sharper Knowledge Base search
-    - Unstylized PDF export option (smaller, faster)
-    - Milvus settings: index & metric configuration
-    - Faster web search performance
-    - Improved accessibility (ARIA labels, modal focus traps)
-    - Various bug fixes and performance enhancements
+    - Global Image Compression Option to optimize all image uploads and outputs for faster load times
+    - Custom Speech-to-Text Content-Type for better audio transcription compatibility
+    - User Message Timestamps on Hover in Chat Bubble UI for better context
+    - Leaderboard Sorting Options for clearer analysis of top performers
+    - Evaluation Details Modal for deeper insights into feedbacks and rankings
+    - Support for Multiple Pages in External Document Loaders
+    - New Accessibility Enhancements including better tab navigation and ARIA support
+    - Performance and Stability Upgrades across frontend and backend
+    - Updated and Expanded Localizations for multiple languages
+    - More descriptive Ollama error messages for better troubleshooting
+    - Fixed issues with webloader bypass, citation duplicates, and OAuth callbacks
+    - Dedicated Permission for System Prompts for enhanced security control
 
 
   Full release notes can be found at https://github.com/open-webui/open-webui/releases

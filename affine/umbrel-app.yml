@@ -3,7 +3,7 @@ id: affine
 name: Affine
 tagline: Open source alternative to Notion, Miro, and Airtable
 category: files
-version: "0.21.5"
+version: "0.22.4"
 port: 3013
 description: >-
   A privacy-focused, local-first, open-source, and ready-to-use alternative for Notion & Miro.
@@ -36,23 +36,20 @@ gallery:
   - 2.jpg
   - 3.jpg
 releaseNotes: >-
-  This update includes several new features, improvements and bug fixes:
-    - Added 4o image adaptation and transcript actions
-    - Introduced time context in chats
-    - Improved search result quality
-    - Fixed attachment filtering in pplx provider
-    - Resolved various UI and dark mode bugs
-    - Addressed audio player issues and timeout settings
-    - Enhanced markdown, LaTeX, and PDF viewer handling
-    - Improved editor tool overlays, link previews, and footnotes
-    - Fixed mobile and Android keyboard and UI problems
-    - Added GPT-4.1 model upgrade and parallel transcript processing
-    - Improved AI history, tagging, and document embedding filters
-    - Refined audio playback rate and transcription styling
-    - Bumped multiple dependencies including NestJS, animejs, and Prisma
+  With enhanced AI capabilities, more integrated features, and extra optimizations, AFFiNE becomes an even more valuable part of your workflow. Plus, this release brings important user experience improvements and adds some of the most requested features
 
 
-  For full release notes, visit https://github.com/toeverything/AFFiNE/releases
+  Some of the key highlights in this release include:
+    - AI workspace embedding
+    - AI search & reason
+    - New all doc & collection
+    - Embed doc with alias
+    - Calendar integrations
+    - Database
+    - Clipboard blob & loading block
+    - Android Test
+
+  Full release notes are found at https://github.com/toeverything/AFFiNE/releases
 dependencies: []
 path: ""
 defaultUsername: ""

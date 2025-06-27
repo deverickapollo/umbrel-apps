@@ -2,7 +2,7 @@ manifestVersion: 1
 id: penpot
 category: developer
 name: Penpot
-version: "2.6.2"
+version: "2.7.2"
 tagline: Design and prototyping platform
 description: >-
   Penpot is a pioneering open-source platform for design and prototyping, tailored specifically for product teams.
@@ -10,15 +10,12 @@ description: >-
   of open standards, specifically SVG. Penpot invites designers all over the world to fall in love with open source
   while getting developers excited about the design process in return.
 releaseNotes: >-
-  This update includes new features and improvements:
-    - Increased height of right sidebar dropdowns
-    - Fixed scroll on token themes modal
-    - Fixed issue with collapsing grouped sets in "edit Theme" dialog
-    - Improved path editor functionality
-    - Fixed pricing CTA configuration
-    - Enhanced component management and layout updates
-    - Improved horizontal scroll in viewer
-    - Various bug fixes and performance enhancements
+  This update includes bug fixes and improvements:
+    - Fixed file importing issues that were preventing some files from being imported properly
+    - Resolved problems with tokens disappearing after manual additions
+    - Fixed incorrect handling of strokes with images when importing files
+    - Improved error messages for better user experience
+    - Fixed invitation link URLs
 
 
   Full release notes are found at https://github.com/penpot/penpot/releases

@@ -3,7 +3,7 @@ id: zabbix
 category: networking
 name: Zabbix
 tagline: The all-in-one, open-source solution that lets you monitor anything
-version: "7.2.6"
+version: "7.2.9"
 description: >-
   ⚠️ Zabbix may take a few minutes to initialize after installation. Please be patient.
 
@@ -38,17 +38,21 @@ defaultUsername: "Admin"
 defaultPassword: "zabbix"
 torOnly: false
 releaseNotes: >-
+  ⚠️ This release includes a breaking change that may cause high CPU utilization when multiple values are received for a single item at once during log monitoring with multiple preprocessing workers configured.
+
+
   This release includes several improvements and bug fixes:
-    - Added new templates for Azure MSSQL, Juniper MX, Pure Storage, and VMware
-    - Improved preprocessing, logging, and proxy/server health monitoring
-    - Fixed UI layout issues, macro handling, and preprocessing bugs
-    - Enhanced agent, proxy, and server performance and stability
-    - Resolved crashes and misbehavior in agent on Windows and with PSK handling
-    - Updated documentation and templates for SMART, Oracle, and MariaDB
-    - Fixed various issues in item discovery, trigger handling, and widget display
-    - Improved compatibility with TimescaleDB, PostgreSQL, and external services
+    - Added top items sorted by received values number and size to diagnostics
+    - Added preprocessor throughput monitoring to server health templates
+    - Added supergroup topics support to Telegram notifications
+    - Fixed memory over-allocation and high CPU utilization issues
+    - Improved SNMP cache cleanup and preprocessing performance
+    - Fixed various frontend validation and display issues
+    - Enhanced agent performance and stability
+    - Resolved crashes and memory leaks in server and proxy components
+    - Updated templates for better compatibility and functionality
 
 
-  Full release notes are available at https://www.zabbix.com/release_notes.
+  Full release notes are available at https://www.zabbix.com/release_notes
 submitter: DavidGarciaCat
 submission: https://github.com/getumbrel/umbrel-apps/pull/1376

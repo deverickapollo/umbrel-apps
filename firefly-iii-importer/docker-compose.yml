@@ -7,7 +7,7 @@ services:
       APP_PORT: 8080
 
   importer:
-    image: fireflyiii/data-importer:version-1.6.2@sha256:753e5c51438da30843ff0f0eef486befca0a7c6f1bb94723cfdf1c80c421272b
+    image: fireflyiii/data-importer:version-1.7.0@sha256:2792ca29ccb172aa80712b24739a3fc5590fc7f756a665a8ea4a78f88bd75676
     restart: on-failure
     environment:
       # firefly-iii container:
