@@ -2,7 +2,7 @@ manifestVersion: 1
 id: romm
 category: media
 name: RomM
-version: "3.8.3"
+version: "3.10.2"
 tagline: A beautiful, powerful, self-hosted rom manager
 description: >-
   👾 RomM (ROM Manager) allows you to scan, enrich, browse and play your game collection with a clean and responsive interface.
@@ -36,12 +36,24 @@ path: ""
 defaultUsername: ""
 defaultPassword: ""
 releaseNotes: >-
-  This update brings several improvements and fixes:
-
-    - Added Italian language support
-    - Fixed issue with zoomed screenshots
-    - Improved mobile navigation panels
-    - Fixed m3u file generation for folders that already contain one
+  This update includes several improvements and bug fixes:
 
 
-  For full release notes, visit https://github.com/rommapp/romm/releases
+  New features and enhancements:
+    - Added support for doom and acpc in emulatorjs
+    - RetroAchievements links now available on game and achievement badges
+    - Achievements earned in hardcore mode are now displayed
+    - Search state is now preserved when navigating between results and games
+    - Pagination resets when changing search field values
+
+
+  Bug fixes:
+    - Fixed fallback for homepage when library is empty
+    - Corrected RetroAchievements platform IDs for metadata matching
+    - Action bar icons now consistently appear white for better readability
+    - Parent folders are now created on game upload when not in the filesystem
+    - Fixed IGDB age ratings
+    - Resolved issue with 3D effect default value in localStorage
+
+
+  Full release notes can be found at https://github.com/rommapp/romm/releases
