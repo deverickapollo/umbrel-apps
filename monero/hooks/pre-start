@@ -6,38 +6,41 @@ PYYAML_SCRIPT="${EXPORTS_APP_DIR}/scripts/docker_gen.py"
 MONERO_DOCKER_COMPOSE_FILE="${EXPORTS_APP_DIR}/docker-compose.yml"
 BTCPAY_DOCKER_COMPOSE_FILE="${UMBREL_ROOT}/app-data/btcpay-server/docker-compose.yml"
 
-MONERO_BTCPAY_ENABLED="false"
+MONERO_BTCPAY_REQUEST_ENABLED="false"
 MONERO_P2POOL_ENABLED="false"
 
 
 #Check if  btcpay is enabled
 if [[ -f "${MONERO_APP_CONFIG_FILE}" ]]; then
-	MONERO_BTCPAY_ENABLED=$(jq -r '.btcpayEnabled' "${MONERO_APP_CONFIG_FILE}")
+	MONERO_BTCPAY_REQUEST_ENABLED=$(jq -r '.btcpayEnabled' "${MONERO_APP_CONFIG_FILE}")
+	MONERO_BTCPAY_INSTALLED=$(jq -r '.btcpayInstalled' "${MONERO_APP_CONFIG_FILE}")
 	MONERO_P2POOL_ENABLED=$(jq -r '.p2pool' "${MONERO_APP_CONFIG_FILE}")
 fi
 
 
-if [ "${MONERO_BTCPAY_ENABLED}" == "true" ]; then
+if [[ "${MONERO_BTCPAY_REQUEST_ENABLED}" == "true" ]] && [[ "${BTCPAY_INSTALLED}" == "false" ]]; then
 	python3 ${PYYAML_SCRIPT} add monero ${BTCPAY_DOCKER_COMPOSE_FILE}
 	changed=$?
 	python3 ${PYYAML_SCRIPT} add btcpay ${BTCPAY_DOCKER_COMPOSE_FILE}
-elif [ "${MONERO_BTCPAY_ENABLED}" == "false"  ]; then
+	jq '.btcpayInstalled = true' "${MONERO_APP_CONFIG_FILE}" > "${MONERO_APP_CONFIG_FILE}.tmp" && mv "${MONERO_APP_CONFIG_FILE}.tmp" "${MONERO_APP_CONFIG_FILE}"
+elif [[ "${MONERO_BTCPAY_REQUEST_ENABLED}" == "false"  ]] && [[ "${BTCPAY_INSTALLED}" == "true" ]]; then
 	python3 ${PYYAML_SCRIPT} remove monero ${BTCPAY_DOCKER_COMPOSE_FILE}
 	changed=$?
 	python3 ${PYYAML_SCRIPT} remove btcpay ${BTCPAY_DOCKER_COMPOSE_FILE}
+	jq '.btcpayInstalled = false' "${MONERO_APP_CONFIG_FILE}" > "${MONERO_APP_CONFIG_FILE}.tmp" && mv "${MONERO_APP_CONFIG_FILE}.tmp" "${MONERO_APP_CONFIG_FILE}"
 fi
 
 
-if [ "$MONERO_P2POOL_ENABLED" == "true" ]; then
+if [[ "$MONERO_P2POOL_ENABLED" == "true" ]]; then
 	python3 ${PYYAML_SCRIPT} add p2pool ${MONERO_DOCKER_COMPOSE_FILE}
 	p2poolchanged=$?
-elif [ "$MONERO_P2POOL_ENABLED" == "false"  ]; then
+elif [[ "$MONERO_P2POOL_ENABLED" == "false"  ]]; then
 	python3 ${PYYAML_SCRIPT} remove p2pool ${MONERO_DOCKER_COMPOSE_FILE}
 	p2poolchanged=$?
 fi
 
 # if changed, restart btcpay
-if [ "$changed" -eq 1 ]; then
+if [[ "$changed" -eq 1 ]]; then
 	# check if umbreld exists, otherwise use the old method
 	if command -v umbreld &> /dev/null; then
 		umbreld client apps.restart.mutate --appId btcpay-server
@@ -59,9 +62,8 @@ if [[ -f "${HIDDEN_SERVICE_FILE}" ]]; then
 	exit
 fi
 
-if [ -f /usr/local/lib/node_modules/umbreld/source/modules/apps/legacy-compat/app-script ]; then
-	/usr/local/lib/node_modules/umbreld/source/modules/apps/legacy-compat/app-script compose "${APP_ID}" up --detach monerod
-	/usr/local/lib/node_modules/umbreld/source/modules/apps/legacy-compat/app-script compose "${APP_ID}" up --detach tor
+"${UMBREL_ROOT}/scripts/app" compose "${APP_ID}" up --detach monerod
+"${UMBREL_ROOT}/scripts/app" compose "${APP_ID}" up --detach tor
 
 echo "App: ${APP_ID} - Generating Tor Hidden Service..."
 

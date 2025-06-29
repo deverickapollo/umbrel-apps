@@ -14,7 +14,7 @@ export APP_MONERO_WALLET_PORT="18082"
 export APP_MONERO_ZMQ_PORT="18083"
 export APP_MONERO_TOR_PORT="9901"
 
-export MONERO_BTCPAY_ENABLED="false"
+export MONERO_BTCPAY_REQUEST_ENABLED="false"
 export MONERO_P2POOL_ENABLED="false"
 export MONERO_ZMQ_ENABLED="false"
 
@@ -22,7 +22,7 @@ export APP_MONERO_WALLET=""
 
 #Check if  btcpay or p2pool is enabled
 if [[ -f "${EXPORTS_APP_DIR}/data/app/monero-config.json" ]]; then
-	MONERO_BTCPAY_ENABLED=$(jq -r '.btcpayEnabled' "${EXPORTS_APP_DIR}/data/app/monero-config.json")
+	MONERO_BTCPAY_REQUEST_ENABLED=$(jq -r '.btcpayEnabled' "${EXPORTS_APP_DIR}/data/app/monero-config.json")
 	MONERO_P2POOL_ENABLED=$(jq -r '.p2pool' "${EXPORTS_APP_DIR}/data/app/monero-config.json")
 	MONERO_ZMQ_ENABLED=$(jq -r '.zmq' "${EXPORTS_APP_DIR}/data/app/monero-config.json")
 	# Set wallet address if p2pool is enabled
@@ -135,7 +135,7 @@ BIN_ARGS+=( "--rpc-bind-port=${APP_MONERO_RPC_PORT}" )
 BIN_ARGS+=( "--rpc-bind-ip=0.0.0.0" )
 BIN_ARGS+=( "--confirm-external-bind" )
 
-if [[ "${MONERO_ZMQ_ENABLED}" == "true" || "${MONERO_BTCPAY_ENABLED}" == "true" ]]; then
+if [[ "${MONERO_ZMQ_ENABLED}" == "true" || "${MONERO_BTCPAY_REQUEST_ENABLED}" == "true" ]]; then
 	BIN_ARGS+=( "--zmq-pub tcp://0.0.0.0:${APP_MONERO_ZMQ_PORT}" )
 fi
 
