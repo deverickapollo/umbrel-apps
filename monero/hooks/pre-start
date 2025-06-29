@@ -7,35 +7,33 @@ MONERO_DOCKER_COMPOSE_FILE="${EXPORTS_APP_DIR}/docker-compose.yml"
 BTCPAY_DOCKER_COMPOSE_FILE="${UMBREL_ROOT}/app-data/btcpay-server/docker-compose.yml"
 
 MONERO_BTCPAY_REQUEST_ENABLED="false"
-MONERO_P2POOL_ENABLED="false"
-
+MONERO_BTCPAY_INSTALLED="false"
+MONERO_P2POOL_REQUEST_ENABLED="false"
 
 #Check if  btcpay is enabled
 if [[ -f "${MONERO_APP_CONFIG_FILE}" ]]; then
-	MONERO_BTCPAY_REQUEST_ENABLED=$(jq -r '.btcpayEnabled' "${MONERO_APP_CONFIG_FILE}")
-	MONERO_BTCPAY_INSTALLED=$(jq -r '.btcpayInstalled' "${MONERO_APP_CONFIG_FILE}")
-	MONERO_P2POOL_ENABLED=$(jq -r '.p2pool' "${MONERO_APP_CONFIG_FILE}")
-	
+	MONERO_BTCPAY_REQUEST_ENABLED=$(jq -r '.btcpayserver' "${MONERO_APP_CONFIG_FILE}")
+	MONERO_BTCPAY_INSTALLED=$(jq -r '.btcpayserverConfigComplete' "${MONERO_APP_CONFIG_FILE}")
+	MONERO_P2POOL_REQUEST_ENABLED=$(jq -r '.p2pool' "${MONERO_APP_CONFIG_FILE}")
 fi
 
-
-if [[ "${MONERO_BTCPAY_REQUEST_ENABLED}" == "true" ]] && [[ "${BTCPAY_INSTALLED}" == "false" ]]; then
+if [[ "${MONERO_BTCPAY_REQUEST_ENABLED}" == "true" ]] && [[ "${MONERO_BTCPAY_INSTALLED}" == "false" ]]; then
 	python3 ${PYYAML_SCRIPT} add monero ${BTCPAY_DOCKER_COMPOSE_FILE}
 	btcpaychanged=$?
 	python3 ${PYYAML_SCRIPT} add btcpay ${BTCPAY_DOCKER_COMPOSE_FILE}
-	jq '.btcpayInstalled = true' "${MONERO_APP_CONFIG_FILE}" > "${MONERO_APP_CONFIG_FILE}.tmp" && mv "${MONERO_APP_CONFIG_FILE}.tmp" "${MONERO_APP_CONFIG_FILE}"
-elif [[ "${MONERO_BTCPAY_REQUEST_ENABLED}" == "false"  ]] && [[ "${BTCPAY_INSTALLED}" == "true" ]]; then
+	jq '.btcpayserverConfigComplete = true' "${MONERO_APP_CONFIG_FILE}" > "${MONERO_APP_CONFIG_FILE}.tmp" && mv "${MONERO_APP_CONFIG_FILE}.tmp" "${MONERO_APP_CONFIG_FILE}"
+elif [[ "${MONERO_BTCPAY_REQUEST_ENABLED}" == "false"  ]] && [[ "${MONERO_BTCPAY_INSTALLED}" == "true" ]]; then
 	python3 ${PYYAML_SCRIPT} remove monero ${BTCPAY_DOCKER_COMPOSE_FILE}
 	btcpaychanged=$?
 	python3 ${PYYAML_SCRIPT} remove btcpay ${BTCPAY_DOCKER_COMPOSE_FILE}
-	jq '.btcpayInstalled = false' "${MONERO_APP_CONFIG_FILE}" > "${MONERO_APP_CONFIG_FILE}.tmp" && mv "${MONERO_APP_CONFIG_FILE}.tmp" "${MONERO_APP_CONFIG_FILE}"
+	jq '.btcpayserverConfigComplete = false' "${MONERO_APP_CONFIG_FILE}" > "${MONERO_APP_CONFIG_FILE}.tmp" && mv "${MONERO_APP_CONFIG_FILE}.tmp" "${MONERO_APP_CONFIG_FILE}"
 fi
 
 # TODO: Update to check if p2p is already installed 
-if [[ "$MONERO_P2POOL_ENABLED" == "true" ]]; then
+if [[ "$MONERO_P2POOL_REQUEST_ENABLED" == "true" ]]; then
 	python3 ${PYYAML_SCRIPT} add p2pool ${MONERO_DOCKER_COMPOSE_FILE}
 	p2poolchanged=$?
-elif [[ "$MONERO_P2POOL_ENABLED" == "false"  ]]; then
+elif [[ "$MONERO_P2POOL_REQUEST_ENABLED" == "false"  ]]; then
 	python3 ${PYYAML_SCRIPT} remove p2pool ${MONERO_DOCKER_COMPOSE_FILE}
 	p2poolchanged=$?
 fi
