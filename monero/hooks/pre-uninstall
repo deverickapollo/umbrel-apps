@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+# Load the monero-config.json file
+EXPORTS_APP_DIR="${UMBREL_ROOT}/app-data/monero"
+MONERO_APP_CONFIG_FILE="${EXPORTS_APP_DIR}/data/app/monero-config.json"
+PYYAML_SCRIPT="${EXPORTS_APP_DIR}/scripts/docker_gen.py"
+BTCPAY_DOCKER_COMPOSE_FILE="${UMBREL_ROOT}/app-data/btcpay-server/docker-compose.yml"
+
+#Check if  btcpay is enabled
+if [[ -f "$MONERO_APP_CONFIG_FILE" ]]; then
+	export MONERO_BTCPAY_REQUEST_ENABLED=$(jq -r '.btcpayserver' "${MONERO_APP_CONFIG_FILE}")
+	if [[ -z "${MONERO_BTCPAY_REQUEST_ENABLED}" ]]; then
+		python3 ${PYYAML_SCRIPT} remove monero ${BTCPAY_DOCKER_COMPOSE_FILE}
+		changed=$?
+		python3 ${PYYAML_SCRIPT} remove btcpay ${BTCPAY_DOCKER_COMPOSE_FILE}
+	fi
+fi

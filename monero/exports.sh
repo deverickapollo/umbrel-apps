@@ -2,17 +2,40 @@ export APP_MONERO_IP="10.21.22.178"
 export APP_MONERO_NODE_IP="10.21.21.179"
 export APP_MONERO_TOR_PROXY_IP="10.21.21.180"
 export APP_MONERO_I2P_DAEMON_IP="10.21.21.181"
+export APP_MONERO_WALLET_IP="10.21.21.182"
 
+export APP_MONERO_WALLET_DATA_DIR="${EXPORTS_APP_DIR}/data/monero_wallet/wallets"
 export APP_MONERO_DATA_DIR="${EXPORTS_APP_DIR}/data/monero"
+
 export APP_MONERO_RPC_PORT="18081"
 export APP_MONERO_RESTRICTED_RPC_PORT="18089"
 export APP_MONERO_P2P_PORT="18080"
+export APP_MONERO_WALLET_PORT="18082"
+export APP_MONERO_ZMQ_PORT="18083"
 export APP_MONERO_TOR_PORT="9901"
+
+export MONERO_BTCPAY_REQUEST_ENABLED="false"
+export MONERO_P2POOL_ENABLED="false"
+export MONERO_ZMQ_ENABLED="false"
+
+export APP_MONERO_WALLET=""
+
+#Check if  btcpay or p2pool is enabled
+if [[ -f "${EXPORTS_APP_DIR}/data/app/monero-config.json" ]]; then
+	MONERO_BTCPAY_REQUEST_ENABLED=$(jq -r '.btcpayEnabled' "${EXPORTS_APP_DIR}/data/app/monero-config.json")
+	MONERO_P2POOL_ENABLED=$(jq -r '.p2pool' "${EXPORTS_APP_DIR}/data/app/monero-config.json")
+	MONERO_ZMQ_ENABLED=$(jq -r '.zmq' "${EXPORTS_APP_DIR}/data/app/monero-config.json")
+	# Set wallet address if p2pool is enabled
+	if [[ "${MONERO_P2POOL_ENABLED}" == "true" ]]; then
+		export APP_MONERO_WALLET=$(jq -r '.moneroAddress' "${EXPORTS_APP_DIR}/data/app/monero-config.json")
+	fi
+fi
+
 
 #temporarily set to mainnet
 MONERO_NETWORK="mainnet"
 MONERO_CHAIN="mainnet"
-MONERO_ENV_FILE="${EXPORTS_APP_DIR}/.env"
+export MONERO_ENV_FILE="${EXPORTS_APP_DIR}/.env"
 
 {
 	MONERO_APP_CONFIG_FILE="${EXPORTS_APP_DIR}/data/app/monero-config.json"
@@ -49,17 +72,34 @@ if [[ ! -f "${MONERO_ENV_FILE}" ]]; then
 	echo "export APP_MONERO_RPC_PASS='${MONERO_RPC_PASS}'"	>> "${MONERO_ENV_FILE}"
 	echo "export APP_MONERO_RPC_AUTH='${MONERO_RPC_AUTH}'"	>> "${MONERO_ENV_FILE}"
 fi
+
+# Function to reset the password using rpcauth.py
+reset_password() {
+  local username="monero"
+  local rpc_auth_output
+  rpc_auth_output=$("${EXPORTS_APP_DIR}/scripts/rpcauth.py" "$username")
+  
+  # Extract the new password from the output
+  local new_password
+  new_password=$(echo "$rpc_auth_output" | tail -1)
+  
+  # Extract the rpc auth string from the output
+  local rpc_auth
+  rpc_auth=$(echo "$rpc_auth_output" | head -2 | tail -1 | sed -e "s/^rpc-login=//")
+
+  sed -i "s/^export APP_MONERO_RPC_PASS=.*/export APP_MONERO_RPC_PASS=${new_password}/" "${MONERO_ENV_FILE}"
+  sed -i "s/^export APP_MONERO_RPC_AUTH=.*/export APP_MONERO_RPC_AUTH=${rpc_auth}/" "${MONERO_ENV_FILE}"
+  sed -i "s/\"resetPassword\": true/\"resetPassword\": false/" "${EXPORTS_APP_DIR}/data/app/monero-config.json"
+
+  return 0
+}
+
+
 # Reset password if PASSWORD_RESET is set
 PASSWORD_RESET=$(jq -r '.resetPassword' "${EXPORTS_APP_DIR}/data/app/monero-config.json")
 
 if [[ "${PASSWORD_RESET}" == "true" ]]; then
-	MONERO_RPC_USER="monero"
-	MONERO_RPC_DETAILS=$("${EXPORTS_APP_DIR}/scripts/rpcauth.py" "${MONERO_RPC_USER}")
-	MONERO_RPC_PASS=$(echo "$MONERO_RPC_DETAILS" | tail -1)
-	MONERO_RPC_AUTH=$(echo "$MONERO_RPC_DETAILS" | head -2 | tail -1 | sed -e "s/^rpc-login=//")
-	echo "export APP_MONERO_RPC_PASS='${MONERO_RPC_PASS}'"	>> "${MONERO_ENV_FILE}"
-	echo "export APP_MONERO_RPC_AUTH='${MONERO_RPC_AUTH}'"	>> "${MONERO_ENV_FILE}"
-	jq '.resetPassword = false' "${EXPORTS_APP_DIR}/data/app/monero-config.json" > "${EXPORTS_APP_DIR}/data/app/monero-config.json.tmp" && mv "${EXPORTS_APP_DIR}/data/app/monero-config.json.tmp" "${EXPORTS_APP_DIR}/data/app/monero-config.json"
+  reset_password
 fi
 
 . "${MONERO_ENV_FILE}"
@@ -95,11 +135,14 @@ BIN_ARGS+=( "--rpc-bind-port=${APP_MONERO_RPC_PORT}" )
 BIN_ARGS+=( "--rpc-bind-ip=0.0.0.0" )
 BIN_ARGS+=( "--confirm-external-bind" )
 
+if [[ "${MONERO_ZMQ_ENABLED}" == "true" || "${MONERO_BTCPAY_REQUEST_ENABLED}" == "true" ]]; then
+	BIN_ARGS+=( "--zmq-pub tcp://0.0.0.0:${APP_MONERO_ZMQ_PORT}" )
+fi
+
 BIN_ARGS+=( "--rpc-login=\"${APP_MONERO_RPC_AUTH}\"" )
 
 export APP_MONERO_COMMAND=$(IFS=" "; echo "${BIN_ARGS[@]}")
 
-# echo "${APP_MONERO_COMMAND}"
 
 rpc_hidden_service_file="${EXPORTS_TOR_DATA_DIR}/app-${EXPORTS_APP_ID}-rpc/hostname"
 p2p_hidden_service_file="${EXPORTS_TOR_DATA_DIR}/app-${EXPORTS_APP_ID}-p2p/hostname"
